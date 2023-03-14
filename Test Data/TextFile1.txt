@@ -1,0 +1,59 @@
+﻿//call driver 
+        private readonly Driver _driver;
+
+        //call page objects
+        private readonly loginPageObjects _loginPageObjects;
+        private readonly contactPageObjects _contactPageObjects;
+
+        //constructor for driver
+        public Feature1Steps(Driver driver)
+        {
+            _driver = driver;
+            _loginPageObjects = new loginPageObjects(_driver.Page);
+            _contactPageObjects = new contactPageObjects(_driver.Page);
+        }
+
+        [Given(@"I am navigate to the url")]
+        public async Task GivenIAmNavigateToTheUrl()
+        {
+            await _driver.Page.GotoAsync("https://org9ef88703.crm11.dynamics.com/main.aspx?appid=ea5b3de8-4298-ed11-aad1-6045bd0f97a0&forceUCI=1&pagetype=dashboard&id=eaa6e6bb-4712-ec11-b6e7-00224820f09b&type=system&_canOverride=true");
+        }
+
+        [Given(@"I Enter the email address")]
+        public async Task GivenIEnterTheEmailAddress()
+        {
+            await _loginPageObjects.inputEmail();
+        }
+
+        [Given(@"I select the next button")]
+        public async Task GivenISelectTheNextButton()
+        {
+            await _loginPageObjects.clickNextButton();
+        }
+
+        [Given(@"I select the send notification button")]
+        public async Task GivenISelectTheSendNotificationButton()
+        {
+            await _loginPageObjects.clickSendNotificationButton();
+        }
+
+        [Given(@"I confirm the MFA")]
+        public async Task GivenIConfirmTheMFA()
+        {
+            await _loginPageObjects.waitforMFA();
+        }
+
+        [When(@"I click to remain signed in")]
+        public async Task WhenIClickToRemainSignedIn()
+        {
+            await _loginPageObjects.clickStaySignedInButton();
+        }
+
+        [Then(@"I am logged in")]
+        public async Task ThenIAmLoggedIn()
+        {
+            await _loginPageObjects.waitForSystemtoLoad();
+            await _loginPageObjects.validateSalesLink();
+            var salesLinkDisplays = await _loginPageObjects.validateSalesLink();
+            Assert.IsTrue(salesLinkDisplays);
+        }
